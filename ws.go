@@ -6,6 +6,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 var clients = make(map[string]*UserChannel)
@@ -47,7 +49,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		// send new message to the channel
-		broadcaster <- ControlMessage{msg.Message, username, roomId}
+		broadcaster <- ControlMessage{msg.Message, username, roomId, strconv.Itoa(int(time.Now().Unix()))}
 	}
 }
 
@@ -80,7 +82,7 @@ func messageClients(msg ControlMessage) {
 }
 
 func messageClient(username string, channel *UserChannel, msg ControlMessage) {
-	err := channel.Conn.WriteJSON(SystemMessage{msg.Message, msg.Username})
+	err := channel.Conn.WriteJSON(SystemMessage{msg.Message, msg.Username, msg.Time})
 	if err != nil && unsafeError(err) {
 		log.Printf("[ERROR]: %v", err)
 		_ = channel.Conn.Close()

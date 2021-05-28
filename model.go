@@ -20,12 +20,14 @@ type ChatMessage struct {
 type SystemMessage struct {
 	Message  string `json:"message"`
 	Username string `json:"username"`
+	Time     string `json:"time"`
 }
 
 type ControlMessage struct {
 	Message  string
-	Username string `json:"username"`
+	Username string
 	RoomId   int
+	Time     string
 }
 
 type UserChannel struct {
